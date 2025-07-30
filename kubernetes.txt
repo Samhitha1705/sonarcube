@@ -1,0 +1,36 @@
+step 1 need to install docker desktop
+step 2 need to sign in
+step 3 need to sign in in docker hub
+step 4 in settings need to enable the Kubernetes
+step 5 to check it need to verify with the commands like
+-> kubectl version --client
+-> kubectl cluster-info
+-> kubectl get nodes
+
+* after creating nginx-deployment.yml file in the folder(k8 deployments) need to apply with this commands
+
+
+-> kubectl apply -f nginx-deployment.yml
+-> kubectl delete -f nginx-deployment.yml
+-> kubectl get deployments
+-> kubectl get pods
+-> kubectl expose deployment nginx-deployment --type=NodePort --port=80
+-> kubectl get svc
+
+after that need to visit the the our localhost url with the port
+
+
+
+
+
+
+git commands
+
+
+-->git init (it will initialize existing git repository)
+-->git add .
+--> git commit -m "first commit"
+-->git branch -M main
+--> git remote add origin https://github.com/Samhitha1705/ems-backend-kubernetes.git
+-->  Remove-Item -Recurse -Force .git (for force removing existing git repository)
+-->git remote remove origin(for removing the origin)
