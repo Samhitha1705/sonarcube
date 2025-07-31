@@ -17,6 +17,13 @@ step 5 to check it need to verify with the commands like
 -> kubectl expose deployment nginx-deployment --type=NodePort --port=80
 -> kubectl get svc
 
+
+one important question is
+--> according to the replicas in the backend.yml file need to show the pods in what they are running means
+->kubectl apply -f .\ems-deployment.yml
+->kubectl delete pod ems-backend-599f4dbc6-tkf9d
+-> kubectl get pods
+
 after that need to visit the the our localhost url with the port
 
 
@@ -34,3 +41,5 @@ git commands
 --> git remote add origin https://github.com/Samhitha1705/ems-backend-kubernetes.git
 -->  Remove-Item -Recurse -Force .git (for force removing existing git repository)
 -->git remote remove origin(for removing the origin)
+
+
