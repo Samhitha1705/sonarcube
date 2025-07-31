@@ -28,11 +28,19 @@ pipeline {
                         bat """
                             mvn clean verify sonar:sonar ^
                             -Dsonar.projectKey=${SONAR_PROJECT_KEY} ^
-                            -Dsonar.projectName=\"${SONAR_PROJECT_NAME}\" ^
+                            -Dsonar.projectName="${SONAR_PROJECT_NAME}" ^
                             -Dsonar.host.url=${SONAR_HOST_URL} ^
                             -Dsonar.token=${SONAR_TOKEN}
                         """
                     }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: false
                 }
             }
         }
@@ -84,8 +92,32 @@ pipeline {
         success {
             echo '✅ EMS Backend successfully deployed!'
         }
+
         failure {
             echo '❌ EMS Deployment failed. Check logs.'
+        }
+
+        always {
+            script {
+                def sonarResult = waitForQualityGate()
+                if (sonarResult.status != 'OK') {
+                    // Send email for general issues
+                    emailext (
+                        subject: "🔴 SonarQube Quality Gate Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        body: "The SonarQube quality gate failed.\n\nResult: ${sonarResult.status}\nSee details: ${SONAR_HOST_URL}/dashboard?id=${SONAR_PROJECT_KEY}",
+                        to: 'Dhanasekhar@middlewaretalents.com'
+                    )
+
+                    // Additional reliability check
+                    if (sonarResult.status.contains("RELIABILITY") || sonarResult.status.contains("CRITICAL")) {
+                        emailext (
+                            subject: "⚠️ Reliability Issue in SonarQube: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                            body: "SonarQube detected reliability issues.\nCheck the project dashboard at: ${SONAR_HOST_URL}/dashboard?id=${SONAR_PROJECT_KEY}",
+                            to: 'Manikanta@middlewaretalents.com'
+                        )
+                    }
+                }
+            }
         }
     }
 }
