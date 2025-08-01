@@ -43,3 +43,16 @@ git commands
 -->git remote remove origin(for removing the origin)
 
 
+sonar cube installation using docker
+
+->need to list all the containers
+docker ps -a
+->need to create the image
+docker pull sonarqube:latest
+->docker run -d --name sonarqube -p 9000:9000 sonarqube:latest
+just restart the container
+->docker start sonarqube
+
+
+
+
